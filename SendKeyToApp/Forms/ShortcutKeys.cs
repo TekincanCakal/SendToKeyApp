@@ -138,7 +138,6 @@ namespace SendKeyToApp.Forms
             shortcutsPanel.Controls.Add(DeletePictureBox);
             if (shortcutKey.IsEnabled)
             {
-                Program.mainForm.EnableShortcutKey(shortcutKey);
                 EnablePictureBox.BackColor = Color.Lime;
                 EnablePictureBox.Image = Properties.Resources._checked;
             }

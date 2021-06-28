@@ -33,6 +33,21 @@ namespace SendKeyToApp
             {
                 Init(objectType);
             }
+            foreach(ShortcutKey shortcutKey in ShortcutKeys)
+            {
+                Method method = GetMethod(shortcutKey.MethodName);
+                if(method == null)
+                {
+                    DeleteShortcutKey(shortcutKey);
+                }
+                else
+                {
+                    if (shortcutKey.IsEnabled)
+                    {
+                        EnableShortcutKey(shortcutKey);
+                    }
+                }
+            }
         }
         public void Init(ObjectType objectType)
         {
@@ -162,7 +177,7 @@ namespace SendKeyToApp
         private void Main_Shown(object sender, EventArgs e)
         {
             SetForegroundWindow(Handle);
-            OpenForm(new ShortcutKeys());
+            OpenForm(new SendKeyPress());
         }
         private void MainNotifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
