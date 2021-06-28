@@ -31,7 +31,7 @@ namespace SendKeyToApp.Forms
         {
             PictureBox pictureBox = (PictureBox)sender;
             int index = Convert.ToInt32(pictureBox.Name.Replace("shortcutsDeletePictureBox", ""));
-            ShortcutKey shortcutKey = Program.mainForm.ShortcutKeys[index];
+            ShortcutKey shortcutKey = Program.mainForm.ShortcutKeys[index - 1];
             Program.mainForm.DeleteShortcutKey(shortcutKey);
             loadShortcutKeys();
         }
