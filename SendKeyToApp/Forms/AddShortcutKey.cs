@@ -1,9 +1,7 @@
-﻿using SendKeyToApp.Enums;
-using SendKeyToApp.Objects;
+﻿using SendKeyToApp.Objects;
 using System;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace SendKeyToApp.Forms
@@ -14,6 +12,8 @@ namespace SendKeyToApp.Forms
         {
             InitializeComponent();
         }
+        Keys InputKey = Keys.None;
+        Keys OutputKey = Keys.None;
         private void AddNewShortcut_Load(object sender, EventArgs e)
         {
             foreach (Process process in Process.GetProcesses())
@@ -28,25 +28,29 @@ namespace SendKeyToApp.Forms
                 }
                 MethodComboBox.SelectedIndex = 0;
             }
-            foreach (Keys key in SendKey.SendKeys)
-            {
-                InputComboBox.Items.Add(key);
-                OutputComboBox.Items.Add(key);
-            }
             SelectAppComboBox.SelectedIndex = 0;
-            InputComboBox.SelectedIndex = 0;
-            OutputComboBox.SelectedIndex = 0;
         }
         private void AddButton_Click(object sender, EventArgs e)
         {
             String appName = SelectAppComboBox.SelectedItem.ToString().Split('-')[0];
 
-            Keys inputKey = (Keys)InputComboBox.SelectedItem;
+            if(InputKey == Keys.None)
+            {
+                MessageBox.Show("Input Key Can't Be Empty");
+                return;
+            }
+           
+            if (OutputKey == Keys.None)
+            {
+                MessageBox.Show("Output Key Can't Be Empty");
+                return;
+            }
+
             bool inputIsCtrl = InputCtrlButton.BackColor == Color.Lime;
             bool inputIsShift = InputShiftButton.BackColor == Color.Lime;
             bool inputIsAlt = InputAltButton.BackColor == Color.Lime;
 
-            Keys outputKey = (Keys)OutputComboBox.SelectedItem;
+
             bool outputIsCtrl = OutputCtrlButton.BackColor == Color.Lime;
             bool outputIsShift = OutputShiftButton.BackColor == Color.Lime;
             bool outputIsAlt = OutputAltButton.BackColor == Color.Lime;
@@ -58,8 +62,8 @@ namespace SendKeyToApp.Forms
             }
 
             String methodName = (String)MethodComboBox.SelectedItem;
-            CombinedKey inputCombinedKey = new CombinedKey(inputKey, inputIsCtrl, inputIsShift, inputIsAlt);
-            CombinedKey outputCombinedKey = new CombinedKey(outputKey, outputIsCtrl, outputIsShift, outputIsAlt);
+            CombinedKey inputCombinedKey = new CombinedKey(InputKey, inputIsCtrl, inputIsShift, inputIsAlt);
+            CombinedKey outputCombinedKey = new CombinedKey(OutputKey, outputIsCtrl, outputIsShift, outputIsAlt);
             ShortcutKey keyShortcut = new ShortcutKey(appName, methodName, inputCombinedKey, outputCombinedKey);
             foreach (ShortcutKey shortcutKey in Program.mainForm.ShortcutKeys)
             {
@@ -84,6 +88,44 @@ namespace SendKeyToApp.Forms
         {
             Button button = (Button)sender;
             button.BackColor = (button.BackColor == Color.Lime) ? Color.Red : Color.Lime;
+        }
+
+        private async void InputListenKeyButton_Click(object sender, EventArgs e)
+        {
+            Keys pressedKey = await Program.mainForm.KeyListener.ListenKey();
+            if(pressedKey == Keys.LShiftKey || pressedKey == Keys.RShiftKey || pressedKey == Keys.ShiftKey || pressedKey == Keys.Shift)
+            {
+                return;
+            }
+            if (pressedKey == Keys.LControlKey || pressedKey == Keys.RControlKey || pressedKey == Keys.ControlKey || pressedKey == Keys.Control)
+            {
+                return;
+            }
+            if(pressedKey == Keys.Alt)
+            {
+                return;
+            }
+            InputListenKeyButton.Text = pressedKey.ToString();
+            InputKey = pressedKey;
+        }
+
+        private async void OutputListenKeyButton_Click(object sender, EventArgs e)
+        {
+            Keys pressedKey = await Program.mainForm.KeyListener.ListenKey();
+            if (pressedKey == Keys.LShiftKey || pressedKey == Keys.RShiftKey || pressedKey == Keys.ShiftKey || pressedKey == Keys.Shift)
+            {
+                return;
+            }
+            if (pressedKey == Keys.LControlKey || pressedKey == Keys.RControlKey || pressedKey == Keys.ControlKey || pressedKey == Keys.Control)
+            {
+                return;
+            }
+            if (pressedKey == Keys.Alt)
+            {
+                return;
+            }
+            OutputListenKeyButton.Text = pressedKey.ToString();
+            OutputKey = pressedKey;
         }
     }
 }

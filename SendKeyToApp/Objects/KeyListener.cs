@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using static SendKeyToApp.Objects.WinApi;
 
@@ -14,12 +15,45 @@ namespace SendKeyToApp.Objects
         private Dictionary<CombinedKey, KeyActions> watchingCombinedKeys;
         private LowLevelKeyboardProc _proc;
         private IntPtr _hookID = IntPtr.Zero;
-        public bool isHooking = false;
+        private bool isHooking = false;
+        private bool isListening = false;
+        private Keys listenedKey = Keys.None;
 
         public KeyListener()
         {
             _proc = HookCallback;
             watchingCombinedKeys = new Dictionary<CombinedKey, KeyActions>();
+        }
+        public async Task<Keys> ListenKey()
+        {
+            bool isCloseAgain = false;
+            if (!isHooking)
+            {
+                SetHook();
+                isCloseAgain = true;
+            }
+            isListening = true;
+            await Unlisten();
+            Keys temp = listenedKey;
+            listenedKey = Keys.None;
+            if (isCloseAgain)
+            {
+                UnHook();
+            }
+            return temp;
+        }
+        public async Task Unlisten()
+        {
+            await Task.Run(() =>
+            {
+                while (true)
+                {
+                    if(listenedKey != Keys.None)
+                    {
+                        break;
+                    }
+                }
+            });
         }
         public void ListenCombinedKey(CombinedKey combinedKey, KeyActions keyActions)
         {
@@ -64,52 +98,59 @@ namespace SendKeyToApp.Objects
             if (nCode >= 0)
             {
                 Keys pressedKey = (Keys)Marshal.ReadInt32(lParam);
-                foreach (var watchingCombinedKey in watchingCombinedKeys)
+                if (!isListening)
                 {
-                    CombinedKey combinedKey = watchingCombinedKey.Key;
-                    if (combinedKey.Key == pressedKey)
+                    foreach (var watchingCombinedKey in watchingCombinedKeys)
                     {
-                        if (combinedKey.IsCtrl && !(GetAsyncKeyState(Keys.ControlKey) < 0))
+                        CombinedKey combinedKey = watchingCombinedKey.Key;
+                        if (combinedKey.Key == pressedKey)
                         {
-                            continue;
-                        }
-                        if (!combinedKey.IsCtrl && (GetAsyncKeyState(Keys.ControlKey) < 0))
-                        {
-                            continue;
-                        }
-                        if (combinedKey.IsShift && !(GetAsyncKeyState(Keys.ShiftKey) < 0))
-                        {
-                            
-                            continue;
-                        }
-                        if (!combinedKey.IsShift && (GetAsyncKeyState(Keys.ShiftKey) < 0))
-                        {
-
-                            continue;
-                        }
-                        if (combinedKey.IsAlt && !(GetAsyncKeyState(Keys.Alt) < 0))
-                        {
-                            continue;
-                        }
-                        if (!combinedKey.IsAlt && (GetAsyncKeyState(Keys.Alt) < 0))
-                        {
-                            continue;
-                        }
-                        if (wParam == (IntPtr)WM_KEYDOWN)
-                        {
-                            if (watchingCombinedKey.Value.PressAction != null)
+                            if (combinedKey.IsCtrl && !(GetAsyncKeyState(Keys.ControlKey) < 0))
                             {
-                                watchingCombinedKey.Value.PressAction.Invoke();
+                                continue;
                             }
-                        }
-                        else if (wParam == (IntPtr)WM_KEYUP)
-                        {
-                            if (watchingCombinedKey.Value.ReleaseAction != null)
+                            if (!combinedKey.IsCtrl && (GetAsyncKeyState(Keys.ControlKey) < 0))
                             {
-                                watchingCombinedKey.Value.ReleaseAction.Invoke();
+                                continue;
+                            }
+                            if (combinedKey.IsShift && !(GetAsyncKeyState(Keys.ShiftKey) < 0))
+                            {
+
+                                continue;
+                            }
+                            if (!combinedKey.IsShift && (GetAsyncKeyState(Keys.ShiftKey) < 0))
+                            {
+
+                                continue;
+                            }
+                            if (combinedKey.IsAlt && !(GetAsyncKeyState(Keys.Alt) < 0))
+                            {
+                                continue;
+                            }
+                            if (!combinedKey.IsAlt && (GetAsyncKeyState(Keys.Alt) < 0))
+                            {
+                                continue;
+                            }
+                            if (wParam == (IntPtr)WM_KEYDOWN)
+                            {
+                                if (watchingCombinedKey.Value.PressAction != null)
+                                {
+                                    watchingCombinedKey.Value.PressAction.Invoke();
+                                }
+                            }
+                            else if (wParam == (IntPtr)WM_KEYUP)
+                            {
+                                if (watchingCombinedKey.Value.ReleaseAction != null)
+                                {
+                                    watchingCombinedKey.Value.ReleaseAction.Invoke();
+                                }
                             }
                         }
                     }
+                }
+                else
+                { 
+                    listenedKey = pressedKey;
                 }
             }
             return CallNextHookEx(_hookID, nCode, wParam, lParam);

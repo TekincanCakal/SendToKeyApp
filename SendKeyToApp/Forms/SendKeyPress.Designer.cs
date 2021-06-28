@@ -29,7 +29,6 @@ namespace SendKeyToApp.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            this.InputKeyComboBox = new System.Windows.Forms.ComboBox();
             this.InputAltButton = new System.Windows.Forms.Button();
             this.InputShiftButton = new System.Windows.Forms.Button();
             this.InputCtrlButton = new System.Windows.Forms.Button();
@@ -47,17 +46,9 @@ namespace SendKeyToApp.Forms
             this.PostMessageButton = new System.Windows.Forms.Button();
             this.SendButton = new System.Windows.Forms.Button();
             this.AppLabel = new System.Windows.Forms.Label();
+            this.InputListenKeyButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.RefreshPictureBox)).BeginInit();
             this.SuspendLayout();
-            // 
-            // InputKeyComboBox
-            // 
-            this.InputKeyComboBox.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.InputKeyComboBox.FormattingEnabled = true;
-            this.InputKeyComboBox.Location = new System.Drawing.Point(280, 70);
-            this.InputKeyComboBox.Name = "InputKeyComboBox";
-            this.InputKeyComboBox.Size = new System.Drawing.Size(230, 30);
-            this.InputKeyComboBox.TabIndex = 50;
             // 
             // InputAltButton
             // 
@@ -280,13 +271,27 @@ namespace SendKeyToApp.Forms
             this.AppLabel.Text = "Select App";
             this.AppLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // InputListenKeyButton
+            // 
+            this.InputListenKeyButton.BackColor = System.Drawing.Color.Aqua;
+            this.InputListenKeyButton.FlatAppearance.BorderSize = 0;
+            this.InputListenKeyButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.InputListenKeyButton.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.InputListenKeyButton.Location = new System.Drawing.Point(280, 70);
+            this.InputListenKeyButton.Name = "InputListenKeyButton";
+            this.InputListenKeyButton.Size = new System.Drawing.Size(230, 30);
+            this.InputListenKeyButton.TabIndex = 55;
+            this.InputListenKeyButton.Text = "Listen Key";
+            this.InputListenKeyButton.UseVisualStyleBackColor = false;
+            this.InputListenKeyButton.Click += new System.EventHandler(this.InputListenKeyButton_Click);
+            // 
             // SendKeyPress
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 22F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(770, 370);
-            this.Controls.Add(this.InputKeyComboBox);
+            this.Controls.Add(this.InputListenKeyButton);
             this.Controls.Add(this.InputAltButton);
             this.Controls.Add(this.InputShiftButton);
             this.Controls.Add(this.InputCtrlButton);
@@ -317,8 +322,6 @@ namespace SendKeyToApp.Forms
         }
 
         #endregion
-
-        private System.Windows.Forms.ComboBox InputKeyComboBox;
         private System.Windows.Forms.Button InputAltButton;
         private System.Windows.Forms.Button InputShiftButton;
         private System.Windows.Forms.Button InputCtrlButton;
@@ -336,5 +339,6 @@ namespace SendKeyToApp.Forms
         private System.Windows.Forms.Button PostMessageButton;
         private System.Windows.Forms.Button SendButton;
         private System.Windows.Forms.Label AppLabel;
+        private System.Windows.Forms.Button InputListenKeyButton;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using SendKeyToApp.Enums;
 using SendKeyToApp.Objects;
+using SendKeyToApp.Other;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -17,6 +18,7 @@ namespace SendKeyToApp.Forms
 
         private MessageMethod SelectedMessageMethod = MessageMethod.Post;
         private HandleMethod SelectedHandleMethod = HandleMethod.FindWindowEx;
+        private Keys InputKey = Keys.None;
 
         private void SendKeyPress_Load(object sender, EventArgs e)
         {
@@ -25,12 +27,6 @@ namespace SendKeyToApp.Forms
                 SelectAppComboBox.Items.Add(String.Format("{0}-{1}", process.ProcessName, process.Id));
             }
             SelectAppComboBox.SelectedIndex = 0;
-
-            foreach (Keys key in SendKey.SendKeys)
-            {
-                InputKeyComboBox.Items.Add(key);
-            }
-            InputKeyComboBox.SelectedIndex = 0;
         }
         private void PostMessageButton_Click(object sender, EventArgs e)
         {
@@ -118,15 +114,34 @@ namespace SendKeyToApp.Forms
                 MessageBox.Show("App Is Not Running");
                 return;
             }
-            Keys selectedKey = (Keys)InputKeyComboBox.SelectedItem;
+            if(InputKey == Keys.None)
+            {
+                MessageBox.Show("Input Key Can't Be Empty");
+                return;
+            }
             bool isCtrl = InputCtrlButton.BackColor == Color.Lime;
             bool isShift = InputShiftButton.BackColor == Color.Lime;
             bool isAlt = InputAltButton.BackColor == Color.Lime;
-            if (selectedKey != Keys.None)
-            {
-                SendKey.SendKeyPressToApp(proc, new CombinedKey(selectedKey, isCtrl, isShift, isAlt), new Method(SelectedMessageMethod, SelectedHandleMethod, appClass, ""));
-            }
+            Utils.SendKeyPressToApp(proc, new CombinedKey(InputKey, isCtrl, isShift, isAlt), new Method(SelectedMessageMethod, SelectedHandleMethod, appClass, ""));
             Enabled = true;
+        }
+        private async void InputListenKeyButton_Click(object sender, EventArgs e)
+        {
+            Keys pressedKey = await Program.mainForm.KeyListener.ListenKey();
+            if (pressedKey == Keys.LShiftKey || pressedKey == Keys.RShiftKey || pressedKey == Keys.ShiftKey || pressedKey == Keys.Shift)
+            {
+                return;
+            }
+            if (pressedKey == Keys.LControlKey || pressedKey == Keys.RControlKey || pressedKey == Keys.ControlKey || pressedKey == Keys.Control)
+            {
+                return;
+            }
+            if (pressedKey == Keys.Alt)
+            {
+                return;
+            }
+            InputListenKeyButton.Text = pressedKey.ToString();
+            InputKey = pressedKey;
         }
     }
 }

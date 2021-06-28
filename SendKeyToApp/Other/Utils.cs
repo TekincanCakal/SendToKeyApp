@@ -3,6 +3,10 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
+using SendKeyToApp.Enums;
+using SendKeyToApp.Objects;
+using System.Diagnostics;
+using static SendKeyToApp.Objects.WinApi;
 
 namespace SendKeyToApp.Other
 {
@@ -39,6 +43,60 @@ namespace SendKeyToApp.Other
                 }
             }
             return Keys.None;
+        }
+        public static void SendKeyPressToApp(Process process, CombinedKey combinedKey, Method method)
+        {
+            IntPtr handle = new IntPtr(0);
+            if (method.HandleMethod == HandleMethod.FindWindow.ToString())
+            {
+                handle = FindWindow(process.MainWindowHandle, process.MainWindowTitle);
+            }
+            else if (method.HandleMethod == HandleMethod.FindWindowEx.ToString())
+            {
+                handle = FindWindowEx(process.MainWindowHandle, new IntPtr(0), method.AppClass, null);
+            }
+            else if (method.HandleMethod == HandleMethod.ProcessHandle.ToString())
+            {
+                handle = process.MainWindowHandle;
+            }
+            if (handle != new IntPtr(0))
+            {
+                if (GetActiveWindowTitle() != process.MainWindowTitle)
+                {
+                    if (combinedKey.IsCtrl)
+                    {
+                        keybd_event(VK_CONTROL, 0, 0, 0);
+                    }
+                    if (combinedKey.IsShift)
+                    {
+                        keybd_event(VK_SHIFT, 0, 0, 0);
+                    }
+                    if (combinedKey.IsAlt)
+                    {
+                        keybd_event(VK_MENU, 0, 0, 0);
+                    }
+                    if (method.MessageMethod == MessageMethod.Post.ToString())
+                    {
+                        PostMessage(handle, WM_KEYDOWN, new IntPtr((int)combinedKey.Key), new IntPtr(0));
+                    }
+                    else if (method.MessageMethod == MessageMethod.Send.ToString())
+                    {
+                        SendMessage(handle, WM_KEYDOWN, new IntPtr((int)combinedKey.Key), new IntPtr(0));
+                    }
+                    if (combinedKey.IsCtrl)
+                    {
+                        keybd_event(VK_CONTROL, 0, 2, 0);
+                    }
+                    if (combinedKey.IsShift)
+                    {
+                        keybd_event(VK_SHIFT, 0, 2, 0);
+                    }
+                    if (combinedKey.IsAlt)
+                    {
+                        keybd_event(VK_MENU, 0, 2, 0);
+                    }
+                }
+            }
         }
     }
 }

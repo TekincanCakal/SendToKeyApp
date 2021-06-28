@@ -34,7 +34,6 @@ namespace SendKeyToApp.Forms
             this.OutputAltButton = new System.Windows.Forms.Button();
             this.OutputShiftButton = new System.Windows.Forms.Button();
             this.OutputCtrlButton = new System.Windows.Forms.Button();
-            this.OutputComboBox = new System.Windows.Forms.ComboBox();
             this.OutputLabel = new System.Windows.Forms.Label();
             this.InputLabel = new System.Windows.Forms.Label();
             this.SelectAppLabel = new System.Windows.Forms.Label();
@@ -42,9 +41,10 @@ namespace SendKeyToApp.Forms
             this.InputAltButton = new System.Windows.Forms.Button();
             this.InputShiftButton = new System.Windows.Forms.Button();
             this.InputCtrlButton = new System.Windows.Forms.Button();
-            this.InputComboBox = new System.Windows.Forms.ComboBox();
             this.SelectAppComboBox = new System.Windows.Forms.ComboBox();
             this.RefreshPictureBox = new System.Windows.Forms.PictureBox();
+            this.InputListenKeyButton = new System.Windows.Forms.Button();
+            this.OutputListenKeyButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.RefreshPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -108,15 +108,6 @@ namespace SendKeyToApp.Forms
             this.OutputCtrlButton.Text = "CTRL";
             this.OutputCtrlButton.UseVisualStyleBackColor = false;
             this.OutputCtrlButton.Click += new System.EventHandler(this.ColorButton);
-            // 
-            // OutputComboBox
-            // 
-            this.OutputComboBox.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.OutputComboBox.FormattingEnabled = true;
-            this.OutputComboBox.Location = new System.Drawing.Point(550, 120);
-            this.OutputComboBox.Name = "OutputComboBox";
-            this.OutputComboBox.Size = new System.Drawing.Size(200, 30);
-            this.OutputComboBox.TabIndex = 47;
             // 
             // OutputLabel
             // 
@@ -204,15 +195,6 @@ namespace SendKeyToApp.Forms
             this.InputCtrlButton.UseVisualStyleBackColor = false;
             this.InputCtrlButton.Click += new System.EventHandler(this.ColorButton);
             // 
-            // InputComboBox
-            // 
-            this.InputComboBox.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.InputComboBox.FormattingEnabled = true;
-            this.InputComboBox.Location = new System.Drawing.Point(550, 70);
-            this.InputComboBox.Name = "InputComboBox";
-            this.InputComboBox.Size = new System.Drawing.Size(200, 30);
-            this.InputComboBox.TabIndex = 39;
-            // 
             // SelectAppComboBox
             // 
             this.SelectAppComboBox.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
@@ -235,18 +217,47 @@ namespace SendKeyToApp.Forms
             this.RefreshPictureBox.TabStop = false;
             this.RefreshPictureBox.Click += new System.EventHandler(this.RefreshPictureBox_Click);
             // 
-            // AddKeyShortcut
+            // InputListenKeyButton
+            // 
+            this.InputListenKeyButton.BackColor = System.Drawing.Color.Aqua;
+            this.InputListenKeyButton.FlatAppearance.BorderSize = 0;
+            this.InputListenKeyButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.InputListenKeyButton.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.InputListenKeyButton.Location = new System.Drawing.Point(550, 70);
+            this.InputListenKeyButton.Name = "InputListenKeyButton";
+            this.InputListenKeyButton.Size = new System.Drawing.Size(200, 30);
+            this.InputListenKeyButton.TabIndex = 53;
+            this.InputListenKeyButton.Text = "Listen Key";
+            this.InputListenKeyButton.UseVisualStyleBackColor = false;
+            this.InputListenKeyButton.Click += new System.EventHandler(this.InputListenKeyButton_Click);
+            // 
+            // OutputListenKeyButton
+            // 
+            this.OutputListenKeyButton.BackColor = System.Drawing.Color.Aqua;
+            this.OutputListenKeyButton.FlatAppearance.BorderSize = 0;
+            this.OutputListenKeyButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.OutputListenKeyButton.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.OutputListenKeyButton.Location = new System.Drawing.Point(550, 120);
+            this.OutputListenKeyButton.Name = "OutputListenKeyButton";
+            this.OutputListenKeyButton.Size = new System.Drawing.Size(200, 30);
+            this.OutputListenKeyButton.TabIndex = 54;
+            this.OutputListenKeyButton.Text = "Listen Key";
+            this.OutputListenKeyButton.UseVisualStyleBackColor = false;
+            this.OutputListenKeyButton.Click += new System.EventHandler(this.OutputListenKeyButton_Click);
+            // 
+            // AddShortcutKey
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 22F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(770, 370);
+            this.Controls.Add(this.OutputListenKeyButton);
+            this.Controls.Add(this.InputListenKeyButton);
             this.Controls.Add(this.MethodComboBox);
             this.Controls.Add(this.MethodLabel);
             this.Controls.Add(this.OutputAltButton);
             this.Controls.Add(this.OutputShiftButton);
             this.Controls.Add(this.OutputCtrlButton);
-            this.Controls.Add(this.OutputComboBox);
             this.Controls.Add(this.OutputLabel);
             this.Controls.Add(this.InputLabel);
             this.Controls.Add(this.SelectAppLabel);
@@ -254,13 +265,12 @@ namespace SendKeyToApp.Forms
             this.Controls.Add(this.InputAltButton);
             this.Controls.Add(this.InputShiftButton);
             this.Controls.Add(this.InputCtrlButton);
-            this.Controls.Add(this.InputComboBox);
             this.Controls.Add(this.SelectAppComboBox);
             this.Controls.Add(this.RefreshPictureBox);
             this.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(5);
-            this.Name = "AddKeyShortcut";
+            this.Name = "AddShortcutKey";
             this.Text = "AddNewShortcut";
             this.Load += new System.EventHandler(this.AddNewShortcut_Load);
             ((System.ComponentModel.ISupportInitialize)(this.RefreshPictureBox)).EndInit();
@@ -275,7 +285,6 @@ namespace SendKeyToApp.Forms
         private System.Windows.Forms.Button OutputAltButton;
         private System.Windows.Forms.Button OutputShiftButton;
         private System.Windows.Forms.Button OutputCtrlButton;
-        private System.Windows.Forms.ComboBox OutputComboBox;
         private System.Windows.Forms.Label OutputLabel;
         private System.Windows.Forms.Label InputLabel;
         private System.Windows.Forms.Label SelectAppLabel;
@@ -283,8 +292,9 @@ namespace SendKeyToApp.Forms
         private System.Windows.Forms.Button InputAltButton;
         private System.Windows.Forms.Button InputShiftButton;
         private System.Windows.Forms.Button InputCtrlButton;
-        private System.Windows.Forms.ComboBox InputComboBox;
         private System.Windows.Forms.ComboBox SelectAppComboBox;
         private System.Windows.Forms.PictureBox RefreshPictureBox;
+        private System.Windows.Forms.Button InputListenKeyButton;
+        private System.Windows.Forms.Button OutputListenKeyButton;
     }
 }

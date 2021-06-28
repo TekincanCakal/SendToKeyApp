@@ -2,6 +2,7 @@
 using SendKeyToApp.Enums;
 using SendKeyToApp.Forms;
 using SendKeyToApp.Objects;
+using SendKeyToApp.Other;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -24,7 +25,6 @@ namespace SendKeyToApp
         {
             InitializeComponent();
             KeyListener = new KeyListener();
-            new SendKey();
             initFiles();
         }
         private void initFiles()
@@ -162,7 +162,7 @@ namespace SendKeyToApp
                     if (process.ProcessName == shortcutKey.AppName)
                     {
                         Method method = Program.mainForm.GetMethod(shortcutKey.MethodName);
-                        SendKey.SendKeyPressToApp(process, shortcutKey.OutputCombinedKey, method);
+                        Utils.SendKeyPressToApp(process, shortcutKey.OutputCombinedKey, method);
                         return;
                     }
                 }
