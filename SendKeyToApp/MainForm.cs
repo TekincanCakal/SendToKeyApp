@@ -23,7 +23,7 @@ namespace SendKeyToApp
         public MainForm()
         {
             InitializeComponent();
-            KeyListener = new KeyListener(); ;
+            KeyListener = new KeyListener();
             new SendKey();
             initFiles();
         }
@@ -32,27 +32,6 @@ namespace SendKeyToApp
             foreach (ObjectType objectType in Enum.GetValues(typeof(ObjectType)))
             {
                 Init(objectType);
-            }
-            foreach(ShortcutKey shortcutKey in ShortcutKeys)
-            {
-                if (shortcutKey.IsEnabled)
-                {
-                    void onPress()
-                    {
-                        Invoke(new Action(delegate
-                        {
-                            foreach (Process process in Process.GetProcesses())
-                            {
-                                if (process.ProcessName == shortcutKey.AppName)
-                                {
-                                    SendKey.SendKeyPressToApp(process, shortcutKey.OutputCombinedKey, shortcutKey.Method);
-                                    return;
-                                }
-                            }
-                        }));
-                    }
-                    KeyListener.ListenCombinedKey(shortcutKey.InputCombinedKey, new KeyActions(onPress, null));
-                }
             }
         }
         public void Init(ObjectType objectType)
@@ -75,7 +54,7 @@ namespace SendKeyToApp
                 }
                 else if (objectType == ObjectType.ShortcutKeys)
                 {
-                    ShortcutKeys = JsonConvert.DeserializeObject<List<Objects.ShortcutKey>>(File.ReadAllText(file));
+                    ShortcutKeys = JsonConvert.DeserializeObject<List<ShortcutKey>>(File.ReadAllText(file));
                 }
             }
             else
@@ -119,12 +98,71 @@ namespace SendKeyToApp
             }
         }
 
-
+        public Method GetMethod(String MethodName)
+        {
+            foreach(Method method in Methods)
+            {
+                if(method.Name == MethodName)
+                {
+                    return method;
+                }
+            }
+            return null;
+        }
+        public void AddShortcutKey(ShortcutKey shortcutKey)
+        {
+            ShortcutKeys.Add(shortcutKey);
+            
+            Update(ObjectType.ShortcutKeys);
+        }
+        public void DeleteShortcutKey(ShortcutKey shortcutKey)
+        {
+            DisableShortcutKey(shortcutKey);
+            ShortcutKeys.Remove(shortcutKey);
+            Update(ObjectType.ShortcutKeys);
+        }
+        public void AddMethod(Method method)
+        {
+            Methods.Add(method);
+            Update(ObjectType.Methods);
+        }
+        public void DeleteMethod(Method method)
+        {
+            foreach(ShortcutKey shortcutKey in ShortcutKeys)
+            {
+                if(shortcutKey.MethodName == method.Name)
+                {
+                    DeleteShortcutKey(shortcutKey);
+                }
+            }
+            Methods.Remove(method);
+            Update(ObjectType.Methods);
+        }
+        public void EnableShortcutKey(ShortcutKey shortcutKey)
+        {
+            Action onPress = new Action(delegate
+            {
+                foreach (Process process in Process.GetProcesses())
+                {
+                    if (process.ProcessName == shortcutKey.AppName)
+                    {
+                        Method method = Program.mainForm.GetMethod(shortcutKey.MethodName);
+                        SendKey.SendKeyPressToApp(process, shortcutKey.OutputCombinedKey, method);
+                        return;
+                    }
+                }
+            });
+            KeyListener.ListenCombinedKey(shortcutKey.InputCombinedKey, new KeyActions(onPress, null));
+        }
+        public void DisableShortcutKey(ShortcutKey shortcutKey)
+        {
+           KeyListener.UnListenCombinedKey(shortcutKey.InputCombinedKey);
+        }
 
         private void Main_Shown(object sender, EventArgs e)
         {
             SetForegroundWindow(Handle);
-            OpenForm(new SendKeyPress());
+            OpenForm(new ShortcutKeys());
         }
         private void MainNotifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
@@ -145,11 +183,11 @@ namespace SendKeyToApp
         }
         private void AddShortcutKeyButton_Click(object sender, EventArgs e)
         {
-            OpenForm(new AddKeyShortcut());
+            OpenForm(new AddShortcutKey());
         }
         private void ShortcutKeysButton_Click(object sender, EventArgs e)
         {
-            OpenForm(new Forms.ShortcutKeys());
+            OpenForm(new ShortcutKeys());
         }
         private void AddMethodButton_Click(object sender, EventArgs e)
         {
@@ -213,7 +251,6 @@ namespace SendKeyToApp
         {
             MessageBox.Show("Teqin");
         }
-
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();

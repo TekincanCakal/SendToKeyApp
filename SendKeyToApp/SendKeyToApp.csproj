@@ -107,11 +107,11 @@
     <Compile Include="Forms\AddMethod.Designer.cs">
       <DependentUpon>AddMethod.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\AddKeyShortcut.cs">
+    <Compile Include="Forms\AddShortcutKey.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\AddKeyShortcut.Designer.cs">
-      <DependentUpon>AddKeyShortcut.cs</DependentUpon>
+    <Compile Include="Forms\AddShortcutKey.Designer.cs">
+      <DependentUpon>AddShortcutKey.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Methods.cs">
       <SubType>Form</SubType>
@@ -161,8 +161,8 @@
     <EmbeddedResource Include="Forms\AddMethod.resx">
       <DependentUpon>AddMethod.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\AddKeyShortcut.resx">
-      <DependentUpon>AddKeyShortcut.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\AddShortcutKey.resx">
+      <DependentUpon>AddShortcutKey.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Methods.resx">
       <DependentUpon>Methods.cs</DependentUpon>

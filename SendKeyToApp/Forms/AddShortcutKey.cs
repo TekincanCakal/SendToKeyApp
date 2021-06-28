@@ -8,9 +8,9 @@ using System.Windows.Forms;
 
 namespace SendKeyToApp.Forms
 {
-    public partial class AddKeyShortcut : Form
+    public partial class AddShortcutKey : Form
     {
-        public AddKeyShortcut()
+        public AddShortcutKey()
         {
             InitializeComponent();
         }
@@ -58,10 +58,9 @@ namespace SendKeyToApp.Forms
             }
 
             String methodName = (String)MethodComboBox.SelectedItem;
-            Method method = Program.mainForm.Methods.First(x => x.Name == methodName);
             CombinedKey inputCombinedKey = new CombinedKey(inputKey, inputIsCtrl, inputIsShift, inputIsAlt);
             CombinedKey outputCombinedKey = new CombinedKey(outputKey, outputIsCtrl, outputIsShift, outputIsAlt);
-            ShortcutKey keyShortcut = new ShortcutKey(appName, method, inputCombinedKey, outputCombinedKey);
+            ShortcutKey keyShortcut = new ShortcutKey(appName, methodName, inputCombinedKey, outputCombinedKey);
             foreach (ShortcutKey shortcutKey in Program.mainForm.ShortcutKeys)
             {
                 if (keyShortcut.Equals(shortcutKey))
@@ -70,8 +69,7 @@ namespace SendKeyToApp.Forms
                     return;
                 }
             }
-            Program.mainForm.ShortcutKeys.Add(keyShortcut);
-            Program.mainForm.Update(ObjectType.ShortcutKeys);
+            Program.mainForm.AddShortcutKey(keyShortcut);
         }
         private void RefreshPictureBox_Click(object sender, EventArgs e)
         {

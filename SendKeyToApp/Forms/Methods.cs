@@ -14,11 +14,11 @@ namespace SendKeyToApp.Forms
 
         private void Methods_Load(object sender, EventArgs e)
         {
-            methodsPanel.Controls.Clear();
             load();
         }
         private void load()
         {
+            methodsPanel.Controls.Clear();
             if (Program.mainForm.Methods.Count > 0)
             {
                 foreach (Method method in Program.mainForm.Methods)
@@ -27,14 +27,32 @@ namespace SendKeyToApp.Forms
                 }
             }
         }
-
+        void DeletePictureBox_Click(object sender, EventArgs e)
+        {
+            DialogResult dialogResult = MessageBox.Show("Sure", "All Shortcut Keys attached To This Method Will Be Deleted", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
+            {
+                PictureBox pictureBox = (PictureBox)sender;
+                int index = Convert.ToInt32(pictureBox.Name.Replace("methodsDeletePictureBox", ""));
+                Method method = Program.mainForm.Methods[index - 1];
+                foreach (ShortcutKey shortcutKey in Program.mainForm.ShortcutKeys.ToArray())
+                {
+                    if (shortcutKey.MethodName == method.Name)
+                    {
+                        Program.mainForm.DeleteShortcutKey(shortcutKey);
+                    }
+                }
+                Program.mainForm.DeleteMethod(method);
+                load();
+            }
+        }
         private void addMethod(Method method)
         {
-            int i = methodsPanel.Controls.Count == 0 ? 1 : 1 + (methodsPanel.Controls.Count / 5);
-            int y = 3 + (38 * (i - 1));
-            Label methodsMethodNameLabelTemp = new Label
+            int index = methodsPanel.Controls.Count == 0 ? 1 : 1 + (methodsPanel.Controls.Count / 5);
+            int y = 3 + (38 * (index - 1));
+            Label MethodNameLabel = new Label
             {
-                Name = "methodsMethodNameLabel" + i,
+                Name = "methodsMethodNameLabel" + index,
                 AutoSize = false,
                 Size = new Size(180, 32),
                 Location = new Point(3, y),
@@ -43,9 +61,9 @@ namespace SendKeyToApp.Forms
                 BorderStyle = BorderStyle.FixedSingle,
                 TextAlign = ContentAlignment.MiddleCenter
             };
-            Label methodsMessageMethodLabelTemp = new Label
+            Label MessageMethodLabel = new Label
             {
-                Name = "methodsMessageMethodLabel" + i,
+                Name = "methodsMessageMethodLabel" + index,
                 AutoSize = false,
                 Size = new Size(180, 32),
                 Location = new Point(189, y),
@@ -54,9 +72,9 @@ namespace SendKeyToApp.Forms
                 BorderStyle = BorderStyle.FixedSingle,
                 TextAlign = ContentAlignment.MiddleCenter
             };
-            Label methodsHandleMethodLabelTemp = new Label
+            Label HandleMethodLabel = new Label
             {
-                Name = "methodsHandleMethodLabel" + i,
+                Name = "methodsHandleMethodLabel" + index,
                 AutoSize = false,
                 Size = new Size(180, 32),
                 Location = new Point(376, y),
@@ -65,9 +83,9 @@ namespace SendKeyToApp.Forms
                 BorderStyle = BorderStyle.FixedSingle,
                 TextAlign = ContentAlignment.MiddleCenter
             };
-            Label methodsAppClassLabelTemp = new Label
+            Label AppClassLabel = new Label
             {
-                Name = "methodsAppClassLabel" + i,
+                Name = "methodsAppClassLabel" + index,
                 AutoSize = false,
                 Size = new Size(128, 32),
                 Location = new Point(561, y),
@@ -76,29 +94,20 @@ namespace SendKeyToApp.Forms
                 BorderStyle = BorderStyle.FixedSingle,
                 TextAlign = ContentAlignment.MiddleCenter
             };
-            PictureBox methodsDeletePictureBoxTemp = new PictureBox
+            PictureBox DeletePictureBox = new PictureBox
             {
-                Name = "methodsDeletePictureBox" + i,
+                Name = "methodsDeletePictureBox" + index,
                 Size = new Size(32, 32),
                 Location = new Point(695, y),
                 Image = Properties.Resources.delete,
                 SizeMode = PictureBoxSizeMode.StretchImage
             };
-            methodsDeletePictureBoxTemp.Click += MethodsDeletePictureBox;
-            void MethodsDeletePictureBox(object sender, EventArgs e)
-            {
-                PictureBox pictureBox = (PictureBox)sender;
-                int index = Convert.ToInt32(pictureBox.Name.Replace("methodsDeletePictureBox", ""));
-                Program.mainForm.Methods.RemoveAt(index - 1);
-                Program.mainForm.Update(Enums.ObjectType.Methods);
-                methodsPanel.Controls.Clear();
-                load();
-            }
-            methodsPanel.Controls.Add(methodsMethodNameLabelTemp);
-            methodsPanel.Controls.Add(methodsMessageMethodLabelTemp);
-            methodsPanel.Controls.Add(methodsHandleMethodLabelTemp);
-            methodsPanel.Controls.Add(methodsAppClassLabelTemp);
-            methodsPanel.Controls.Add(methodsDeletePictureBoxTemp);
+            DeletePictureBox.Click += DeletePictureBox_Click;
+            methodsPanel.Controls.Add(MethodNameLabel);
+            methodsPanel.Controls.Add(MessageMethodLabel);
+            methodsPanel.Controls.Add(HandleMethodLabel);
+            methodsPanel.Controls.Add(AppClassLabel);
+            methodsPanel.Controls.Add(DeletePictureBox);
         }
     }
 }

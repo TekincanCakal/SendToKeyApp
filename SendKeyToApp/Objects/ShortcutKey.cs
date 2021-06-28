@@ -1,21 +1,22 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace SendKeyToApp.Objects
 {
     public class ShortcutKey
     {
         public String AppName { get; set; }
-        public Method Method { get; set; }
+        public String MethodName { get; set; }
 
         public CombinedKey InputCombinedKey { get; set; }
         public CombinedKey OutputCombinedKey { get; set; }
 
         public bool IsEnabled { get; set; }
 
-        public ShortcutKey(String appName, Method method, CombinedKey inputCombinedKey, CombinedKey outputCombinedKey)
+        public ShortcutKey(String appName, String methodName , CombinedKey inputCombinedKey, CombinedKey outputCombinedKey)
         {
             AppName = appName;
-            Method = method;
+            MethodName = methodName;
 
             InputCombinedKey = inputCombinedKey;
             OutputCombinedKey = outputCombinedKey;

@@ -1,7 +1,7 @@
 ﻿
 namespace SendKeyToApp.Forms
 {
-    partial class AddKeyShortcut
+    partial class AddShortcutKey
     {
         /// <summary>
         /// Required designer variable.

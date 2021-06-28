@@ -106,8 +106,7 @@ namespace SendKeyToApp.Forms
                     return;
                 }
             }
-            Program.mainForm.Methods.Add(method);
-            Program.mainForm.Update(ObjectType.Methods);
+            Program.mainForm.AddMethod(method);
         }
     }
 }

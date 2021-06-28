@@ -73,11 +73,25 @@ namespace SendKeyToApp.Objects
                         {
                             continue;
                         }
-                        if (combinedKey.IsShift && !(GetAsyncKeyState(Keys.ShiftKey) < 0))
+                        if (!combinedKey.IsCtrl && (GetAsyncKeyState(Keys.ControlKey) < 0))
                         {
                             continue;
                         }
+                        if (combinedKey.IsShift && !(GetAsyncKeyState(Keys.ShiftKey) < 0))
+                        {
+                            
+                            continue;
+                        }
+                        if (!combinedKey.IsShift && (GetAsyncKeyState(Keys.ShiftKey) < 0))
+                        {
+
+                            continue;
+                        }
                         if (combinedKey.IsAlt && !(GetAsyncKeyState(Keys.Alt) < 0))
+                        {
+                            continue;
+                        }
+                        if (!combinedKey.IsAlt && (GetAsyncKeyState(Keys.Alt) < 0))
                         {
                             continue;
                         }

@@ -1,6 +1,5 @@
 ﻿using SendKeyToApp.Objects;
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -15,155 +14,133 @@ namespace SendKeyToApp.Forms
 
         private void Shortcuts_Load(object sender, EventArgs e)
         {
-            shortcutsPanel.Controls.Clear();
-            load();
+            loadShortcutKeys();
         }
-        private void load()
+        private void loadShortcutKeys()
         {
+            shortcutsPanel.Controls.Clear();
             if (Program.mainForm.ShortcutKeys.Count > 0)
             {
                 foreach (ShortcutKey keyShortcut in Program.mainForm.ShortcutKeys)
                 {
-                    addKeyShortcuts(keyShortcut);
+                    addShortcutKey(keyShortcut);
                 }
             }
         }
-        private void addKeyShortcuts(ShortcutKey keyShortcut)
+        private void DeletePictureBox_Click(object sender, EventArgs e)
         {
-            int i = shortcutsPanel.Controls.Count == 0 ? 1 : 1 + (shortcutsPanel.Controls.Count / 7);
-            int y = 3 + (38 * (i - 1));
-            PictureBox shortcutsEnablePictureBoxTemp = new PictureBox
+            PictureBox pictureBox = (PictureBox)sender;
+            int index = Convert.ToInt32(pictureBox.Name.Replace("shortcutsDeletePictureBox", ""));
+            ShortcutKey shortcutKey = Program.mainForm.ShortcutKeys[index];
+            Program.mainForm.DeleteShortcutKey(shortcutKey);
+            loadShortcutKeys();
+        }
+        private void EnablePictureBox_Click(object sender, EventArgs e)
+        {
+            PictureBox pictureBox = (PictureBox)sender;
+            int index = Convert.ToInt32(pictureBox.Name.Replace("shortcutsEnablePictureBox", ""));
+            ShortcutKey shortcutKey = Program.mainForm.ShortcutKeys[index - 1];
+            if (shortcutKey.IsEnabled)
             {
-                Name = "shortcutsEnablePictureBox" + i,
+                pictureBox.BackColor = Color.Transparent;
+                pictureBox.Image = Properties.Resources._unchecked;
+                Program.mainForm.DisableShortcutKey(shortcutKey);
+            }
+            else
+            {
+                pictureBox.BackColor = Color.Lime;
+                pictureBox.Image = Properties.Resources._checked;
+                Program.mainForm.EnableShortcutKey(shortcutKey);
+            }
+            shortcutKey.IsEnabled = !shortcutKey.IsEnabled;
+            Program.mainForm.Update(Enums.ObjectType.ShortcutKeys);
+        }
+        private void addShortcutKey(ShortcutKey shortcutKey)
+        {
+            int index = shortcutsPanel.Controls.Count == 0 ? 1 : 1 + (shortcutsPanel.Controls.Count / 7);
+            int y = 3 + (38 * (index - 1));
+            PictureBox EnablePictureBox = new PictureBox
+            {
+                Name = "shortcutsEnablePictureBox" + index,
                 Size = new Size(32, 32),
                 Location = new Point(3, y),
                 Image = Properties.Resources._unchecked,
                 SizeMode = PictureBoxSizeMode.StretchImage
             };
-            Label shortcutsAppNameLabelTemp = new Label
+            Label AppNameLabel = new Label
             {
-                Name = "shortcutsAppNameLabel" + i,
+                Name = "shortcutsAppNameLabel" + index,
                 AutoSize = false,
                 Size = new Size(100, 32),
                 Location = new Point(41, y),
-                Text = keyShortcut.AppName,
+                Text = shortcutKey.AppName,
                 Font = new Font("Consolas", 8.25f),
                 BorderStyle = BorderStyle.FixedSingle,
                 TextAlign = ContentAlignment.MiddleCenter
             };
-            Label shortcutsInputLabelTemp = new Label
+            Label InputLabel = new Label
             {
-                Name = "shortcutsInputLabel" + i,
+                Name = "shortcutsInputLabel" + index,
                 AutoSize = false,
                 Size = new Size(160, 32),
                 Location = new Point(147, y),
-                Text = keyShortcut.InputCombinedKey.ToString(),
+                Text = shortcutKey.InputCombinedKey.ToString(),
                 Font = new Font("Consolas", 8.25f),
                 BorderStyle = BorderStyle.FixedSingle,
                 TextAlign = ContentAlignment.MiddleCenter
             };
-            PictureBox shortcutsRightArrowPictureBoxTemp = new PictureBox
+            PictureBox RightArrowPictureBox = new PictureBox
             {
-                Name = "shortcutsRightArrowPictureBox" + i,
+                Name = "shortcutsRightArrowPictureBox" + index,
                 Size = new Size(64, 32),
                 Location = new Point(313, y),
                 Image = Properties.Resources.right_arrow,
                 SizeMode = PictureBoxSizeMode.StretchImage
             };
-            Label shortcutsOutputLabelTemp = new Label
+            Label OutputLabel = new Label
             {
-                Name = "shortcutsOutputLabel" + i,
+                Name = "shortcutsOutputLabel" + index,
                 AutoSize = false,
                 Size = new Size(160, 32),
                 Location = new Point(383, y),
-                Text = keyShortcut.OutputCombinedKey.ToString(),
+                Text = shortcutKey.OutputCombinedKey.ToString(),
                 Font = new Font("Consolas", 8.25f),
                 BorderStyle = BorderStyle.FixedSingle,
                 TextAlign = ContentAlignment.MiddleCenter
             };
-            Label shortcutsMethodLabelTemp = new Label
+            Label MethodLabel = new Label
             {
-                Name = "shortcutsMethodLabel" + i,
+                Name = "shortcutsMethodLabel" + index,
                 AutoSize = false,
                 Size = new Size(140, 32),
                 Location = new Point(549, y),
-                Text = keyShortcut.Method.Name,
+                Text = shortcutKey.MethodName,
                 Font = new Font("Consolas", 8.25f),
                 BorderStyle = BorderStyle.FixedSingle,
                 TextAlign = ContentAlignment.MiddleCenter
             };
-            PictureBox shortcutsDeletePictureBoxTemp = new PictureBox
+            PictureBox DeletePictureBox = new PictureBox
             {
-                Name = "shortcutsDeletePictureBox" + i,
+                Name = "shortcutsDeletePictureBox" + index,
                 Size = new Size(32, 32),
                 Location = new Point(695, y),
                 Image = Properties.Resources.delete,
                 SizeMode = PictureBoxSizeMode.StretchImage
             };
-            shortcutsEnablePictureBoxTemp.Click += ShortcutsEnablePictureBoxTemp;
-            shortcutsDeletePictureBoxTemp.Click += ShortcutsDeletePictureBoxTemp_Click;
-            void ShortcutsDeletePictureBoxTemp_Click(object sender, EventArgs e)
+            EnablePictureBox.Click += EnablePictureBox_Click;
+            DeletePictureBox.Click += DeletePictureBox_Click;
+            shortcutsPanel.Controls.Add(EnablePictureBox);
+            shortcutsPanel.Controls.Add(AppNameLabel);
+            shortcutsPanel.Controls.Add(InputLabel);
+            shortcutsPanel.Controls.Add(RightArrowPictureBox);
+            shortcutsPanel.Controls.Add(OutputLabel);
+            shortcutsPanel.Controls.Add(MethodLabel);
+            shortcutsPanel.Controls.Add(DeletePictureBox);
+            if (shortcutKey.IsEnabled)
             {
-                PictureBox pictureBox = (PictureBox)sender;
-                int index = Convert.ToInt32(pictureBox.Name.Replace("shortcutsDeletePictureBox", ""));
-                Program.mainForm.ShortcutKeys.RemoveAt(index - 1);
-                Program.mainForm.Update(Enums.ObjectType.ShortcutKeys);
-                shortcutsPanel.Controls.Clear();
-                load();
-            }
-            void onEnable(ShortcutKey shortcutKey, PictureBox pictureBox)
-            {
-                pictureBox.BackColor = Color.Lime;
-                pictureBox.Image = Properties.Resources._checked;
-                void onPress()
-                {
-                    Invoke(new Action(delegate
-                    {
-                        foreach (Process process in Process.GetProcesses())
-                        {
-                            if (process.ProcessName == shortcutKey.AppName)
-                            {
-                                SendKey.SendKeyPressToApp(process, shortcutKey.OutputCombinedKey, shortcutKey.Method);
-                                return;
-                            }
-                        }
-                    }));
-                }
-                Program.mainForm.KeyListener.ListenCombinedKey(shortcutKey.InputCombinedKey, new KeyActions(onPress, null));
-            }
-            void onDisable(ShortcutKey shortcutKey, PictureBox pictureBox)
-            {
-                pictureBox.BackColor = Color.Transparent;
-                pictureBox.Image = Properties.Resources._unchecked;
-                Program.mainForm.KeyListener.UnListenCombinedKey(shortcutKey.InputCombinedKey);
-            }
-            void ShortcutsEnablePictureBoxTemp(object sender, EventArgs e)
-            {
-                PictureBox pictureBox = (PictureBox)sender;
-                int index = Convert.ToInt32(pictureBox.Name.Replace("shortcutsEnablePictureBox", ""));
-                ShortcutKey selectedKeyShortcut = Program.mainForm.ShortcutKeys[index - 1];
-                if (!Program.mainForm.ShortcutKeys[index - 1].IsEnabled)
-                {
-                    onEnable(Program.mainForm.ShortcutKeys[index - 1], pictureBox);
-                }
-                else
-                {
-                    onDisable(Program.mainForm.ShortcutKeys[index - 1], pictureBox);
-                }
-                Program.mainForm.ShortcutKeys[index - 1].IsEnabled = !Program.mainForm.ShortcutKeys[index - 1].IsEnabled;
-                Program.mainForm.Update(Enums.ObjectType.ShortcutKeys);
-            }
-            shortcutsPanel.Controls.Add(shortcutsEnablePictureBoxTemp);
-            shortcutsPanel.Controls.Add(shortcutsAppNameLabelTemp);
-            shortcutsPanel.Controls.Add(shortcutsInputLabelTemp);
-            shortcutsPanel.Controls.Add(shortcutsRightArrowPictureBoxTemp);
-            shortcutsPanel.Controls.Add(shortcutsOutputLabelTemp);
-            shortcutsPanel.Controls.Add(shortcutsMethodLabelTemp);
-            shortcutsPanel.Controls.Add(shortcutsDeletePictureBoxTemp);
-            if (keyShortcut.IsEnabled)
-            {
-                PictureBox pictureBox = (PictureBox)shortcutsPanel.Controls["shortcutsEnablePictureBox" + i];
-                onEnable(keyShortcut, pictureBox);
+                Program.mainForm.EnableShortcutKey(shortcutKey);
+                EnablePictureBox.BackColor = Color.Lime;
+                EnablePictureBox.Image = Properties.Resources._checked;
             }
         }
     }
