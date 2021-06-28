@@ -15,6 +15,10 @@ namespace SendKeyToApp.Forms
         private void Methods_Load(object sender, EventArgs e)
         {
             methodsPanel.Controls.Clear();
+            load();
+        }
+        private void load()
+        {
             if (Program.mainForm.Methods.Count > 0)
             {
                 foreach (Method method in Program.mainForm.Methods)
@@ -85,13 +89,10 @@ namespace SendKeyToApp.Forms
             {
                 PictureBox pictureBox = (PictureBox)sender;
                 int index = Convert.ToInt32(pictureBox.Name.Replace("methodsDeletePictureBox", ""));
-                methodsPanel.Controls.Remove(methodsPanel.Controls["methodsMethodNameLabel" + index]);
-                methodsPanel.Controls.Remove(methodsPanel.Controls["methodsMessageMethodLabel" + index]);
-                methodsPanel.Controls.Remove(methodsPanel.Controls["methodsHandleMethodLabel" + index]);
-                methodsPanel.Controls.Remove(methodsPanel.Controls["methodsAppClassLabel" + index]);
-                methodsPanel.Controls.Remove(methodsPanel.Controls["methodsDeletePictureBox" + index]);
                 Program.mainForm.Methods.RemoveAt(index - 1);
                 Program.mainForm.Update(Enums.ObjectType.Methods);
+                methodsPanel.Controls.Clear();
+                load();
             }
             methodsPanel.Controls.Add(methodsMethodNameLabelTemp);
             methodsPanel.Controls.Add(methodsMessageMethodLabelTemp);

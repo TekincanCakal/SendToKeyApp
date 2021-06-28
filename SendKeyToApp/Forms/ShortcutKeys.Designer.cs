@@ -45,6 +45,7 @@ namespace SendKeyToApp.Forms
             // 
             // shortcutsPanel
             // 
+            this.shortcutsPanel.AutoScroll = true;
             this.shortcutsPanel.Controls.Add(this.shortcutsMethodLabel);
             this.shortcutsPanel.Controls.Add(this.shortcutsDeletePictureBox);
             this.shortcutsPanel.Controls.Add(this.shortcutsEnablePictureBox);

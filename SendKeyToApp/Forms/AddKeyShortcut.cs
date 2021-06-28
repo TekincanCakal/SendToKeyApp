@@ -51,14 +51,20 @@ namespace SendKeyToApp.Forms
             bool outputIsShift = OutputShiftButton.BackColor == Color.Lime;
             bool outputIsAlt = OutputAltButton.BackColor == Color.Lime;
 
+            if(MethodComboBox.SelectedItem == null)
+            {
+                MessageBox.Show("You Have To Select Method");
+                return;
+            }
+
             String methodName = (String)MethodComboBox.SelectedItem;
             Method method = Program.mainForm.Methods.First(x => x.Name == methodName);
             CombinedKey inputCombinedKey = new CombinedKey(inputKey, inputIsCtrl, inputIsShift, inputIsAlt);
             CombinedKey outputCombinedKey = new CombinedKey(outputKey, outputIsCtrl, outputIsShift, outputIsAlt);
-            Objects.ShortcutKeys keyShortcut = new Objects.ShortcutKeys(appName, method, inputCombinedKey, outputCombinedKey);
-            foreach (Objects.ShortcutKeys temp in Program.mainForm.ShortcutKeys)
+            ShortcutKey keyShortcut = new ShortcutKey(appName, method, inputCombinedKey, outputCombinedKey);
+            foreach (ShortcutKey shortcutKey in Program.mainForm.ShortcutKeys)
             {
-                if (keyShortcut.Equals(temp))
+                if (keyShortcut.Equals(shortcutKey))
                 {
                     MessageBox.Show("This KeyShortcut Already Exist");
                     return;

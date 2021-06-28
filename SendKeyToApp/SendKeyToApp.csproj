@@ -138,7 +138,7 @@
       <DependentUpon>ShortcutKeys.cs</DependentUpon>
     </Compile>
     <Compile Include="Objects\KeyListener.cs" />
-    <Compile Include="Objects\ShortcutKeys.cs" />
+    <Compile Include="Objects\ShortcutKey.cs" />
     <Compile Include="Objects\Method.cs" />
     <Compile Include="Objects\Settings.cs" />
     <Compile Include="Other\Utils.cs" />

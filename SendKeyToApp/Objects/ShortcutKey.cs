@@ -2,7 +2,7 @@
 
 namespace SendKeyToApp.Objects
 {
-    public class ShortcutKeys
+    public class ShortcutKey
     {
         public String AppName { get; set; }
         public Method Method { get; set; }
@@ -12,7 +12,7 @@ namespace SendKeyToApp.Objects
 
         public bool IsEnabled { get; set; }
 
-        public ShortcutKeys(String appName, Method method, CombinedKey inputCombinedKey, CombinedKey outputCombinedKey)
+        public ShortcutKey(String appName, Method method, CombinedKey inputCombinedKey, CombinedKey outputCombinedKey)
         {
             AppName = appName;
             Method = method;
@@ -25,11 +25,11 @@ namespace SendKeyToApp.Objects
 
         public override bool Equals(object obj)
         {
-            if (obj.GetType() != typeof(ShortcutKeys))
+            if (obj.GetType() != typeof(ShortcutKey))
             {
                 return false;
             }
-            ShortcutKeys keyShortcut = (ShortcutKeys)obj;
+            ShortcutKey keyShortcut = (ShortcutKey)obj;
             if (!keyShortcut.InputCombinedKey.Equals(InputCombinedKey) || !keyShortcut.OutputCombinedKey.Equals(OutputCombinedKey))
             {
                 return false;

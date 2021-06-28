@@ -41,6 +41,7 @@ namespace SendKeyToApp.Forms
             // 
             // methodsPanel
             // 
+            this.methodsPanel.AutoScroll = true;
             this.methodsPanel.Controls.Add(this.methodsAppClassLabel);
             this.methodsPanel.Controls.Add(this.methodsHandleMethodLabel);
             this.methodsPanel.Controls.Add(this.methodsMessageMethodLabel);

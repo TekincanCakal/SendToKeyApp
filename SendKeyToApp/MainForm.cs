@@ -4,6 +4,7 @@ using SendKeyToApp.Forms;
 using SendKeyToApp.Objects;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -14,14 +15,15 @@ namespace SendKeyToApp
     public partial class MainForm : Form
     {
         public Random random = new Random();
-        public KeyListener KeyListener = new KeyListener();
-        public List<Objects.ShortcutKeys> ShortcutKeys;
+        public KeyListener KeyListener;
+        public List<ShortcutKey> ShortcutKeys;
         public List<Method> Methods;
         public Objects.Settings Settings;
 
         public MainForm()
         {
             InitializeComponent();
+            KeyListener = new KeyListener(); ;
             new SendKey();
             initFiles();
         }
@@ -30,6 +32,27 @@ namespace SendKeyToApp
             foreach (ObjectType objectType in Enum.GetValues(typeof(ObjectType)))
             {
                 Init(objectType);
+            }
+            foreach(ShortcutKey shortcutKey in ShortcutKeys)
+            {
+                if (shortcutKey.IsEnabled)
+                {
+                    void onPress()
+                    {
+                        Invoke(new Action(delegate
+                        {
+                            foreach (Process process in Process.GetProcesses())
+                            {
+                                if (process.ProcessName == shortcutKey.AppName)
+                                {
+                                    SendKey.SendKeyPressToApp(process, shortcutKey.OutputCombinedKey, shortcutKey.Method);
+                                    return;
+                                }
+                            }
+                        }));
+                    }
+                    KeyListener.ListenCombinedKey(shortcutKey.InputCombinedKey, new KeyActions(onPress, null));
+                }
             }
         }
         public void Init(ObjectType objectType)
@@ -52,7 +75,7 @@ namespace SendKeyToApp
                 }
                 else if (objectType == ObjectType.ShortcutKeys)
                 {
-                    ShortcutKeys = JsonConvert.DeserializeObject<List<Objects.ShortcutKeys>>(File.ReadAllText(file));
+                    ShortcutKeys = JsonConvert.DeserializeObject<List<Objects.ShortcutKey>>(File.ReadAllText(file));
                 }
             }
             else
@@ -69,7 +92,7 @@ namespace SendKeyToApp
                 }
                 else if (objectType == ObjectType.ShortcutKeys)
                 {
-                    ShortcutKeys = new List<Objects.ShortcutKeys>();
+                    ShortcutKeys = new List<Objects.ShortcutKey>();
                 }
                 Update(objectType);
             }
