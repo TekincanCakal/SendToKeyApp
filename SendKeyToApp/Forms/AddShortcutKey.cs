@@ -92,40 +92,30 @@ namespace SendKeyToApp.Forms
 
         private async void InputListenKeyButton_Click(object sender, EventArgs e)
         {
+            Enabled = false;
+            again:
             Keys pressedKey = await Program.mainForm.KeyListener.ListenKey();
-            if(pressedKey == Keys.LShiftKey || pressedKey == Keys.RShiftKey || pressedKey == Keys.ShiftKey || pressedKey == Keys.Shift)
+            if(pressedKey == Keys.LShiftKey || pressedKey == Keys.RShiftKey || pressedKey == Keys.ShiftKey || pressedKey == Keys.Shift || pressedKey == Keys.LControlKey || pressedKey == Keys.RControlKey || pressedKey == Keys.ControlKey || pressedKey == Keys.Control || pressedKey == Keys.Alt)
             {
-                return;
-            }
-            if (pressedKey == Keys.LControlKey || pressedKey == Keys.RControlKey || pressedKey == Keys.ControlKey || pressedKey == Keys.Control)
-            {
-                return;
-            }
-            if(pressedKey == Keys.Alt)
-            {
-                return;
+                goto again;
             }
             InputListenKeyButton.Text = pressedKey.ToString();
             InputKey = pressedKey;
+            Enabled = true;
         }
 
         private async void OutputListenKeyButton_Click(object sender, EventArgs e)
         {
+            Enabled = false;
+            again:
             Keys pressedKey = await Program.mainForm.KeyListener.ListenKey();
-            if (pressedKey == Keys.LShiftKey || pressedKey == Keys.RShiftKey || pressedKey == Keys.ShiftKey || pressedKey == Keys.Shift)
+            if (pressedKey == Keys.LShiftKey || pressedKey == Keys.RShiftKey || pressedKey == Keys.ShiftKey || pressedKey == Keys.Shift || pressedKey == Keys.LControlKey || pressedKey == Keys.RControlKey || pressedKey == Keys.ControlKey || pressedKey == Keys.Control || pressedKey == Keys.Alt)
             {
-                return;
-            }
-            if (pressedKey == Keys.LControlKey || pressedKey == Keys.RControlKey || pressedKey == Keys.ControlKey || pressedKey == Keys.Control)
-            {
-                return;
-            }
-            if (pressedKey == Keys.Alt)
-            {
-                return;
+                goto again;
             }
             OutputListenKeyButton.Text = pressedKey.ToString();
             OutputKey = pressedKey;
+            Enabled = true;
         }
     }
 }
